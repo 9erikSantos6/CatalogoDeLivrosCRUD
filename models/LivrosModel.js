@@ -1,4 +1,4 @@
-const dbConn = require('../lib/db');
+const dbConn = require('../lib/connection');
 
 class LivrosModel {
     init() {
@@ -13,10 +13,10 @@ class LivrosModel {
 
         dbConn.query(sql, (err) => {
             if (err) {
-                console.log('> Houve um erro ao criar a tabela Livros!')
+                console.log('> Houve um erro ao criar a tabela Livros!');
                 throw err;
             }
-            console.log('> Conectado a tabela Livros com sucesso!')
+            console.log('> Conectado a tabela Livros com sucesso!');
         });
     }
 
@@ -47,7 +47,7 @@ class LivrosModel {
             const form_data = {
                 nome: nome,
                 autor: autor
-            }
+            };
             const sql = `insert into Livros set ?`;
             dbConn.query(sql, form_data, (err) => {
                 if (err) {
@@ -69,12 +69,12 @@ class LivrosModel {
         const sql = `select * from Livros where id = ${id}`;
         dbConn.query(sql, (err, linhas) => {
             if (err) throw err;
-    
+
             if (linhas.length <= 0) {
                 req.flash('error', `Livro não encontrado com id ${id}!`);
                 res.redirect('/livros');
                 return;
-            } 
+            }
             res.render('livros/editar', {
                 titulo: 'Editar Livro',
                 id: linhas[0].id,
@@ -89,29 +89,29 @@ class LivrosModel {
         const nome = req.body.nome;
         const autor = req.body.autor;
         let errors = false;
-    
+
         if (nome.length === 0 || autor.length === 0) {
             errors = true;
             req.flash('error', 'Por favor, digite o nome e o autor!');
-            res.render('livros/editar', { 
-                id: id, 
+            res.render('livros/editar', {
+                id: id,
                 nome: nome,
                 autor: autor
             });
             return;
         }
-    
+
         if (!errors) {
             const form_data = {
                 nome: nome,
                 autor: autor
-            }
+            };
             const sql = `update Livros set ? where id = ${id}`;
             dbConn.query(sql, form_data, (err) => {
                 if (err) {
                     req.flash('error', err);
-                    res.render('livros/editar', { 
-                        id: id, 
+                    res.render('livros/editar', {
+                        id: id,
                         nome: form_data.nome,
                         autor: form_data.autor
                     });
@@ -127,7 +127,7 @@ class LivrosModel {
         const id = req.params.id;
         const sql = `delete from Livros where id = ${id}`;
         dbConn.query(sql, (err) => {
-            if (err){
+            if (err) {
                 req.flash(err);
                 res.redirect('/livros');
                 return;
@@ -137,5 +137,4 @@ class LivrosModel {
         });
     }
 }
-
 module.exports = new LivrosModel;

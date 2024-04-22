@@ -12,7 +12,7 @@ const usersRouter = require('./routes/users');
 
 // imports Livros
 const livrosRouter = require('./routes/livros'); 
-const livrosModel = require('./models/livrosModel')
+const livrosModel = require('./models/LivrosModel');
 
 const app = express();
 
@@ -60,6 +60,14 @@ app.use((err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+
+// Init Server
+const server = app.listen(3000, () => {
+  const host = server.address().address;
+  const port = server.address().port;
+  console.log(`> Servidor rodando em http://${host}:${port} ...`);
 });
 
 module.exports = app;
